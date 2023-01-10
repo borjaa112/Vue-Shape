@@ -1,11 +1,12 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import Shape from './components/Shape.vue'
 </script>
 
 <template>
   <main>
-
+    <Shape />
   </main>
 </template>
 
