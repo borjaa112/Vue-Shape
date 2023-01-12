@@ -10,16 +10,25 @@ import { ref } from "vue";
 
 const startCoords = ref({})
 const endCoords = ref({})
+let currentDiv = null
 
 export default defineComponent({
     setup() {
         function drawStart(event) {
-
             const rect = event.target.getBoundingClientRect();
             startCoords.value = {
                 x: event.clientX - rect.left,
                 y: event.clientY - rect.top
             }
+
+            currentDiv = document.createElement("div")
+            currentDiv.className = 'selection-area'
+            currentDiv.style.position = 'absolute'
+            currentDiv.style.top = startCoords.value.y + "px"
+            currentDiv.style.left = startCoords.value.x + "px"
+
+            const container = document.body.querySelector(".container")
+            container.append(currentDiv)
         }
 
         function drawEnd(event) {
@@ -30,18 +39,24 @@ export default defineComponent({
                 y: event.clientY - rect.top
             }
 
-            drawDiv(startCoords.value, endCoords.value)
+            currentDiv = null;
+
+
+            // drawDiv(startCoords.value, endCoords.value)
+            // startCoords.value = {}
+            // endCoords.value = {}
         }
 
         function drawDiv(startCoords, endCoords) {
+            const div = document.createElement("div")
+            div.className = 'selection-area'
             const minX = Math.min(startCoords.x, endCoords.x)
             const maxX = Math.max(startCoords.x, endCoords.x)
 
             const minY = Math.min(startCoords.y, endCoords.y)
             const maxY = Math.max(startCoords.y, endCoords.y)
 
-            const div = document.createElement("div",)
-            div.className = 'selection-zone'
+
             div.style.position = 'absolute'
             div.style.top = minY + "px"
             div.style.left = minX + "px"
@@ -56,7 +71,21 @@ export default defineComponent({
         }
 
         function continuousDivDrawer(event) {
-            console.log(event);
+            if (startCoords.value.x && currentDiv) {
+                const rect = event.target.getBoundingClientRect();
+                const currentX = event.clientX - rect.left;
+                const currentY = event.clientY - rect.top;
+                // calculate minX, minY, maxX y maxY
+                const minX = Math.min(startCoords.value.x, currentX);
+                const maxX = Math.max(startCoords.value.x, currentX);
+                const minY = Math.min(startCoords.value.y, currentY);
+                const maxY = Math.max(startCoords.value.y, currentY);
+                // Update position and size of the div
+                currentDiv.style.top = minY + "px"
+                currentDiv.style.left = minX + "px"
+                currentDiv.style.width = maxX - minX + "px"
+                currentDiv.style.height = maxY - minY + "px"
+            }
         }
 
         return {
@@ -69,7 +98,7 @@ export default defineComponent({
 </script>
 
 <style>
-.selection-zone {
+.selection-area {
     border: 1px solid red;
     background-color: #FF000055;
 
