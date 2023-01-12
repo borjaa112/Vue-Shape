@@ -1,6 +1,8 @@
 <template>
     <div @mousedown="drawStart" @mouseup="drawEnd" @mousemove="continuousDivDrawer" class="container">
-        <slot></slot>
+        <div ref="wrapper" class="wrapper">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -14,8 +16,9 @@ let currentDiv = null
 
 export default defineComponent({
     setup() {
+        const wrapper = ref()
         function drawStart(event) {
-            const rect = event.target.getBoundingClientRect();
+            const rect = wrapper.value.getBoundingClientRect();
             startCoords.value = {
                 x: event.clientX - rect.left,
                 y: event.clientY - rect.top
@@ -32,7 +35,7 @@ export default defineComponent({
         }
 
         function drawEnd(event) {
-            const rect = event.target.getBoundingClientRect();
+            const rect = wrapper.value.getBoundingClientRect();
 
             endCoords.value = {
                 x: event.clientX - rect.left,
@@ -72,9 +75,13 @@ export default defineComponent({
 
         function continuousDivDrawer(event) {
             if (startCoords.value.x && currentDiv) {
-                const rect = event.target.getBoundingClientRect();
+                const rect = wrapper.value.getBoundingClientRect();
                 const currentX = event.clientX - rect.left;
                 const currentY = event.clientY - rect.top;
+
+                console.log(event.target);
+                console.log("Eje X: " + currentX + " Eje Y: " + currentY);
+
                 // calculate minX, minY, maxX y maxY
                 const minX = Math.min(startCoords.value.x, currentX);
                 const maxX = Math.max(startCoords.value.x, currentX);
@@ -91,7 +98,8 @@ export default defineComponent({
         return {
             drawStart,
             drawEnd,
-            continuousDivDrawer
+            continuousDivDrawer,
+            wrapper
         }
     }
 })
