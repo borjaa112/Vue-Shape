@@ -2,11 +2,16 @@
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import Shape from './components/Shape.vue'
+import ShapeDrawer from './components/ShapeDrawer.vue';
 </script>
 
 <template>
   <main>
-    <Shape />
+    <ShapeDrawer>
+      <img
+        src="https://assets-global.website-files.com/5b5729421aca332c60585f78/61ba503872080311dde1ea56_long-form-landing-page-examples.png"
+        alt="" draggable="false">
+    </ShapeDrawer>
   </main>
 </template>
 
