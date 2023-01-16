@@ -1,7 +1,12 @@
 <template>
     <div @mousedown="drawStart" @mouseup="drawEnd" @mousemove="continuousDivDrawer" class="container">
-        <div ref="wrapper" class="wrapper">
-            <slot></slot>
+        <div ref="wrapper" class="wrapper" style="position: relative; ">
+            <div>
+                <slot></slot>
+            </div>
+            <span v-for="(shape, index) in shapesArray" :key="index" style="position: absolute; top: 0;">
+                <component :is="shape" />
+            </span>
         </div>
     </div>
 </template>
@@ -9,29 +14,43 @@
 <script>
 import { h, defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
-
+import ShapeArea from "./ShapeArea.vue";
 const startCoords = ref({})
 const endCoords = ref({})
-let currentDiv = null
 
 export default defineComponent({
+    components: {
+        ShapeArea
+    },
     setup() {
+        const shapesArray = ref([])
+
+        function createShapeState() {
+            return {
+                top: ref(),
+                left: ref(),
+                width: ref(),
+                height: ref()
+            }
+        }
+        let shapeState = null
         const wrapper = ref()
+        let currentShape = null
         function drawStart(event) {
+
             const rect = wrapper.value.getBoundingClientRect();
             startCoords.value = {
                 x: event.clientX - rect.left,
                 y: event.clientY - rect.top
             }
 
-            currentDiv = document.createElement("div")
-            currentDiv.className = 'selection-area'
-            currentDiv.style.position = 'absolute'
-            currentDiv.style.top = startCoords.value.y + "px"
-            currentDiv.style.left = startCoords.value.x + "px"
+            shapeState = createShapeState()
 
-            const container = document.body.querySelector(".container")
-            container.append(currentDiv)
+            shapeState.top.value = startCoords.value.y
+            shapeState.left.value = startCoords.value.x
+            currentShape = h(ShapeArea, { shapeState })
+            shapesArray.value.push(currentShape)
+
         }
 
         function drawEnd(event) {
@@ -41,8 +60,8 @@ export default defineComponent({
                 x: event.clientX - rect.left,
                 y: event.clientY - rect.top
             }
-
-            currentDiv = null;
+            currentShape = null;
+            shapeState = null
 
 
             // drawDiv(startCoords.value, endCoords.value)
@@ -50,37 +69,13 @@ export default defineComponent({
             // endCoords.value = {}
         }
 
-        function drawDiv(startCoords, endCoords) {
-            const div = document.createElement("div")
-            div.className = 'selection-area'
-            const minX = Math.min(startCoords.x, endCoords.x)
-            const maxX = Math.max(startCoords.x, endCoords.x)
-
-            const minY = Math.min(startCoords.y, endCoords.y)
-            const maxY = Math.max(startCoords.y, endCoords.y)
-
-
-            div.style.position = 'absolute'
-            div.style.top = minY + "px"
-            div.style.left = minX + "px"
-            div.style.right = maxX + "px"
-
-
-            div.style.width = maxX - minX + "px"
-            div.style.height = maxY - minY + "px"
-
-            const container = document.body.querySelector(".container")
-            container.append(div)
-        }
 
         function continuousDivDrawer(event) {
-            if (startCoords.value.x && currentDiv) {
+            if (startCoords.value.x && shapeState !== null) {
                 const rect = wrapper.value.getBoundingClientRect();
                 const currentX = event.clientX - rect.left;
                 const currentY = event.clientY - rect.top;
 
-                console.log(event.target);
-                console.log("Eje X: " + currentX + " Eje Y: " + currentY);
 
                 // calculate minX, minY, maxX y maxY
                 const minX = Math.min(startCoords.value.x, currentX);
@@ -88,10 +83,11 @@ export default defineComponent({
                 const minY = Math.min(startCoords.value.y, currentY);
                 const maxY = Math.max(startCoords.value.y, currentY);
                 // Update position and size of the div
-                currentDiv.style.top = minY + "px"
-                currentDiv.style.left = minX + "px"
-                currentDiv.style.width = maxX - minX + "px"
-                currentDiv.style.height = maxY - minY + "px"
+
+                shapeState.top.value = minY
+                shapeState.left.value = minX
+                shapeState.width.value = maxX - minX
+                shapeState.height.value = maxY - minY
             }
         }
 
@@ -99,8 +95,10 @@ export default defineComponent({
             drawStart,
             drawEnd,
             continuousDivDrawer,
-            wrapper
+            wrapper,
+            shapesArray
         }
+
     }
 })
 </script>
