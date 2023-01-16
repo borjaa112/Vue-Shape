@@ -1,19 +1,26 @@
 <template>
-    <div :style="shapeStyle">
-    </div>
+    <vue-resizable :dragSelector="dragSelector" :fit-parent="fit">
+        <div :style="shapeStyle" class="resizable-content">
+        </div>
+    </vue-resizable>
 
 </template>
 
 <script>
 import { computed, defineComponent } from "@vue/runtime-core";
+import VueResizable from 'vue-resizable'
 
 export default defineComponent({
+    components: {
+        VueResizable
+    },
     props: {
         shapeState: {
             type: Object
         }
     },
     setup(props) {
+        const dragSelector = '.resizable-content'
         const shapeStyle = computed(() => ({
             position: "absolute",
             top: props.shapeState.top.value + "px",
@@ -25,9 +32,20 @@ export default defineComponent({
 
         }))
 
+        function eHandler(data) {
+            console.log("hol");
+            props.shapeState.width = data.width
+            props.shapeState.height = data.height
+            props.shapeState.left = data.left
+            props.shapeState.top = data.top
+
+        }
+
 
         return {
-            shapeStyle
+            shapeStyle,
+            eHandler,
+            dragSelector
         }
     }
 })
