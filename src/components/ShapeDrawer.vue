@@ -2,6 +2,7 @@
     <button :onclick="selectionMode" value="draw">Draw</button>
     <button :onclick="selectionMode" value="move">Move</button>
     <button :onclick="undo">Undo</button>
+    <button :onclick="redo">Redo</button>
     <div @mousedown="drawStart" @mouseup="drawEnd" @mousemove="continuousDivDrawer" class="container">
         <div ref="wrapper" class="wrapper" style="position: relative; ">
             <div>
@@ -28,6 +29,7 @@ export default defineComponent({
     setup() {
         const modeSelected = ref()
         const shapesArray = ref([])
+        const undoElements = []
 
         function createShapeState() {
             return {
@@ -102,9 +104,16 @@ export default defineComponent({
         }
 
         function undo() {
-            shapesArray.value.pop()
+            if (shapesArray.value.length > 0) {
+                undoElements.push(shapesArray.value.pop())
+            }
         }
 
+        function redo() {
+            if (undoElements.length > 0) {
+                shapesArray.value.push(undoElements.pop())
+            }
+        }
         return {
             drawStart,
             drawEnd,
@@ -113,7 +122,8 @@ export default defineComponent({
             shapesArray,
             selectionMode,
             modeSelected,
-            undo
+            undo,
+            redo
         }
 
     }
