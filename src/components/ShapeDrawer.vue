@@ -1,6 +1,7 @@
 <template>
     <button :onclick="selectionMode" value="draw">Draw</button>
     <button :onclick="selectionMode" value="move">Move</button>
+    <button :onclick="undo">Undo</button>
     <div @mousedown="drawStart" @mouseup="drawEnd" @mousemove="continuousDivDrawer" class="container">
         <div ref="wrapper" class="wrapper" style="position: relative; ">
             <div>
@@ -100,6 +101,10 @@ export default defineComponent({
             modeSelected.value = event.target.value
         }
 
+        function undo() {
+            shapesArray.value.pop()
+        }
+
         return {
             drawStart,
             drawEnd,
@@ -107,7 +112,8 @@ export default defineComponent({
             wrapper,
             shapesArray,
             selectionMode,
-            modeSelected
+            modeSelected,
+            undo
         }
 
     }
