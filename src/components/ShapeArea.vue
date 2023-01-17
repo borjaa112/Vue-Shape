@@ -1,5 +1,5 @@
 <template>
-    <vue-resizable :dragSelector="dragSelector" :fit-parent="fit">
+    <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers">
         <div :style="shapeStyle" class="resizable-content">
         </div>
     </vue-resizable>
@@ -17,10 +17,17 @@ export default defineComponent({
     props: {
         shapeState: {
             type: Object
+        },
+        modeSelected: {
+            type: Object
         }
     },
     setup(props) {
+        console.log(props.modeSelected.value);
         const dragSelector = '.resizable-content'
+        // const active = computed(() => {
+        //     props.modeSelected.value
+        // })
         const shapeStyle = computed(() => ({
             position: "absolute",
             top: props.shapeState.top.value + "px",
@@ -33,7 +40,6 @@ export default defineComponent({
         }))
 
         function eHandler(data) {
-            console.log("hol");
             props.shapeState.width = data.width
             props.shapeState.height = data.height
             props.shapeState.left = data.left
@@ -41,11 +47,16 @@ export default defineComponent({
 
         }
 
+        const handlers = computed(() => {
+            return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
+        })
+
 
         return {
             shapeStyle,
             eHandler,
-            dragSelector
+            dragSelector,
+            handlers
         }
     }
 })
