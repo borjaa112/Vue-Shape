@@ -1,6 +1,9 @@
 <template>
-    <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers">
-        <div :style="shapeStyle" class="resizable-content">
+    <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers"
+        style="position: relative" :width="shapeState.width.value" :height="shapeState.height.value"
+        :left="shapeState.left.value" :top="shapeState.top.value" @resize:move="eHandler" @resize:start="eHandler"
+        @resize:end="eHandler" @drag:move="eHandler" @drag:start="eHandler" @drag:end="eHandler">
+        <div :style="sizeStyle" class="resizable-content">
         </div>
     </vue-resizable>
 
@@ -32,6 +35,13 @@ export default defineComponent({
             border: "1px solid red",
             backgroundColor: "#FF000055"
 
+        }))
+
+        const sizeStyle = computed(() => ({
+            width: props.shapeState.width.value + "px",
+            height: props.shapeState.height.value + "px",
+            border: "1px solid red",
+            backgroundColor: "#FF000055"
         }))
 
         const dragSelector = '.resizable-content'
@@ -79,7 +89,8 @@ export default defineComponent({
         }
 
         const handlers = computed(() => {
-            return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
+            // return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
+            return ["r", "rb", "b", "lb", "l", "lt", "t", "rt"]
         })
 
 
@@ -87,7 +98,8 @@ export default defineComponent({
             shapeStyle,
             eHandler,
             dragSelector,
-            handlers
+            handlers,
+            sizeStyle
         }
     }
 })
