@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "vue": "^3.2.45",
+    "vue-resizable": "^2.1.7",
     "vue3-moveable": "^0.17.1",
     "vue3-selecto": "^1.6.3"
   },

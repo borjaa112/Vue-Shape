@@ -1,6 +1,3 @@
-<script setup>
-import ShapeDrawer from './components/ShapeDrawer.vue';
-</script>
 
 <template>
   <main>
@@ -11,6 +8,13 @@ import ShapeDrawer from './components/ShapeDrawer.vue';
     </ShapeDrawer>
   </main>
 </template>
+
+<script setup>
+import ShapeDrawer from './components/ShapeDrawer.vue';
+
+
+</script>
+
 
 <style scoped>
 header {

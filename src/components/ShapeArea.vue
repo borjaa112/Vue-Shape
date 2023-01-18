@@ -1,15 +1,24 @@
 <template>
-    <div :style="shapeStyle">
-    </div>
+    <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers">
+        <div :style="shapeStyle" class="resizable-content">
+        </div>
+    </vue-resizable>
 
 </template>
 
 <script>
-import { computed, defineComponent } from "@vue/runtime-core";
+import { computed, defineComponent, watch } from "@vue/runtime-core";
+import VueResizable from 'vue-resizable'
 
 export default defineComponent({
+    components: {
+        VueResizable
+    },
     props: {
         shapeState: {
+            type: Object
+        },
+        modeSelected: {
             type: Object
         }
     },
@@ -25,9 +34,60 @@ export default defineComponent({
 
         }))
 
+        const dragSelector = '.resizable-content'
+        // const active = computed(() => {
+        //     props.modeSelected.value
+        // })
+
+        watch(props.modeSelected, (newMode) => {
+            if (newMode === 'move') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.add('drag-el')
+                }
+            }
+            if (newMode === 'draw') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.remove('drag-el')
+                }
+            }
+        }, { immediate: true })
+
+
+        watch(props.shapeState.width, () => {
+            if (props.modeSelected.value === 'move') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.add('drag-el')
+                }
+            }
+            if (props.modeSelected.value === 'draw') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.remove('drag-el')
+                }
+            }
+        }, { immediate: true })
+
+        function eHandler(data) {
+            props.shapeState.width = data.width
+            props.shapeState.height = data.height
+            props.shapeState.left = data.left
+            props.shapeState.top = data.top
+
+        }
+
+        const handlers = computed(() => {
+            return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
+        })
+
 
         return {
-            shapeStyle
+            shapeStyle,
+            eHandler,
+            dragSelector,
+            handlers
         }
     }
 })
