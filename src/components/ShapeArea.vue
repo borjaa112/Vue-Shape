@@ -2,9 +2,8 @@
     <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers"
         style="position: relative" :width="shapeState.width.value" :height="shapeState.height.value"
         :left="shapeState.left.value" :top="shapeState.top.value" @resize:move="eHandler" @resize:start="eHandler"
-        @resize:end="eHandler" @drag:move="eHandler" @drag:start="eHandler" @drag:end="eHandler">
-        <div :style="sizeStyle" class="resizable-content">
-        </div>
+        @resize:end="eHandler" @drag:move="eHandler" @drag:start="eHandler" @drag:end="eHandler"
+        class="resizable-content selection-area">
     </vue-resizable>
 
 </template>
@@ -28,10 +27,6 @@ export default defineComponent({
     setup(props) {
         const shapeStyle = computed(() => ({
             position: "absolute",
-            top: props.shapeState.top.value + "px",
-            left: props.shapeState.left.value + "px",
-            width: props.shapeState.width.value + "px",
-            height: props.shapeState.height.value + "px",
             border: "1px solid red",
             backgroundColor: "#FF000055"
 
@@ -89,8 +84,7 @@ export default defineComponent({
         }
 
         const handlers = computed(() => {
-            // return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
-            return ["r", "rb", "b", "lb", "l", "lt", "t", "rt"]
+            return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
         })
 
 
@@ -107,7 +101,7 @@ export default defineComponent({
 
 <style scoped>
 .selection-area {
-    position: absolute;
+    /* position: absolute; */
     border: 1px solid red;
     background-color: #FF000055;
 }
