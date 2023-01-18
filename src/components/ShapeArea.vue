@@ -23,11 +23,6 @@ export default defineComponent({
         }
     },
     setup(props) {
-        console.log(props.modeSelected.value);
-        const dragSelector = '.resizable-content'
-        // const active = computed(() => {
-        //     props.modeSelected.value
-        // })
         const shapeStyle = computed(() => ({
             position: "absolute",
             top: props.shapeState.top.value + "px",
@@ -39,8 +34,12 @@ export default defineComponent({
 
         }))
 
+        const dragSelector = '.resizable-content'
+        // const active = computed(() => {
+        //     props.modeSelected.value
+        // })
+
         watch(props.modeSelected, (newMode) => {
-            console.log(newMode);
             if (newMode === 'move') {
                 const elements = document.querySelectorAll(".resizable-content")
                 for (let element of elements.entries()) {
@@ -52,7 +51,6 @@ export default defineComponent({
                 for (let element of elements.entries()) {
                     element[1].classList.remove('drag-el')
                 }
-                console.log(elements);
             }
         }, { immediate: true })
 
