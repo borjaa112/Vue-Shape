@@ -25,19 +25,7 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const shapeStyle = computed(() => ({
-            position: "absolute",
-            border: "1px solid red",
-            backgroundColor: "#FF000055"
 
-        }))
-
-        const sizeStyle = computed(() => ({
-            width: props.shapeState.width.value + "px",
-            height: props.shapeState.height.value + "px",
-            border: "1px solid red",
-            backgroundColor: "#FF000055"
-        }))
 
         const dragSelector = '.resizable-content'
         // const active = computed(() => {
@@ -76,10 +64,10 @@ export default defineComponent({
         }, { immediate: true })
 
         function eHandler(data) {
-            props.shapeState.width = data.width
-            props.shapeState.height = data.height
-            props.shapeState.left = data.left
-            props.shapeState.top = data.top
+            props.shapeState.width.value = data.width
+            props.shapeState.height.value = data.height
+            props.shapeState.left.value = data.left
+            props.shapeState.top.value = data.top
 
         }
 
@@ -89,11 +77,9 @@ export default defineComponent({
 
 
         return {
-            shapeStyle,
             eHandler,
             dragSelector,
-            handlers,
-            sizeStyle
+            handlers
         }
     }
 })
