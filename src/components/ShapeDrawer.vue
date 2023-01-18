@@ -27,7 +27,7 @@ export default defineComponent({
         ShapeArea
     },
     setup() {
-        const modeSelected = ref()
+        const modeSelected = ref('draw')
         const shapesArray = ref([])
         const undoElements = []
 

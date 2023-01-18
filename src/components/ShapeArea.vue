@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { computed, defineComponent } from "@vue/runtime-core";
+import { computed, defineComponent, watch } from "@vue/runtime-core";
 import VueResizable from 'vue-resizable'
 
 export default defineComponent({
@@ -38,6 +38,39 @@ export default defineComponent({
             backgroundColor: "#FF000055"
 
         }))
+
+        watch(props.modeSelected, (newMode) => {
+            console.log(newMode);
+            if (newMode === 'move') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.add('drag-el')
+                }
+            }
+            if (newMode === 'draw') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.remove('drag-el')
+                }
+                console.log(elements);
+            }
+        }, { immediate: true })
+
+
+        watch(props.shapeState.width, () => {
+            if (props.modeSelected.value === 'move') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.add('drag-el')
+                }
+            }
+            if (props.modeSelected.value === 'draw') {
+                const elements = document.querySelectorAll(".resizable-content")
+                for (let element of elements.entries()) {
+                    element[1].classList.remove('drag-el')
+                }
+            }
+        }, { immediate: true })
 
         function eHandler(data) {
             props.shapeState.width = data.width
