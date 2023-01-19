@@ -9,7 +9,7 @@
                 <slot></slot>
             </div>
             <span v-for="(shape, index) in shapesArray" :key="index" style="position: absolute; top: 0;">
-                <component :is="shape" />
+                <component :is="shape" @delete="deleteChild(index)" />
             </span>
         </div>
     </div>
@@ -114,6 +114,10 @@ export default defineComponent({
                 shapesArray.value.push(undoElements.pop())
             }
         }
+
+        function deleteChild(index) {
+            shapesArray.value.splice(index, 1)
+        }
         return {
             drawStart,
             drawEnd,
@@ -123,7 +127,8 @@ export default defineComponent({
             selectionMode,
             modeSelected,
             undo,
-            redo
+            redo,
+            deleteChild
         }
 
     }

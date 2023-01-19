@@ -1,17 +1,19 @@
 <template>
     <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers"
         style="position: relative" :width="shapeState.width.value" :height="shapeState.height.value"
-        :left="shapeState.left.value" :top="shapeState.top.value" @resize:move="eHandler" @resize:start="eHandler"
-        @resize:end="eHandler" @drag:move="eHandler" @drag:start="eHandler" @drag:end="eHandler"
+        :left="shapeState.left.value" :top="shapeState.top.value" @resize:move="moveHandler" @resize:start="moveHandler"
+        @resize:end="moveHandler" @drag:move="moveHandler" @drag:start="moveHandler" @drag:end="moveHandler"
         class="resizable-content selection-area">
+        <button @click="deleteHandler">Delete</button>
     </vue-resizable>
 
 </template>
 
 <script>
 import { computed, defineComponent, watch } from "@vue/runtime-core";
+import { defineEmits } from "@vue/runtime-core";
 import VueResizable from 'vue-resizable'
-
+const emit = defineEmits(['delete'])
 export default defineComponent({
     components: {
         VueResizable
@@ -24,7 +26,7 @@ export default defineComponent({
             type: Object
         }
     },
-    setup(props) {
+    setup(props, { emit }) {
 
 
         const dragSelector = '.resizable-content'
@@ -63,7 +65,7 @@ export default defineComponent({
             }
         }, { immediate: true })
 
-        function eHandler(data) {
+        function moveHandler(data) {
             props.shapeState.width.value = data.width
             props.shapeState.height.value = data.height
             props.shapeState.left.value = data.left
@@ -74,12 +76,16 @@ export default defineComponent({
         const handlers = computed(() => {
             return props.modeSelected.value == 'move' ? ["r", "rb", "b", "lb", "l", "lt", "t", "rt"] : []
         })
+        function deleteHandler() {
+            emit('delete')
+        }
 
 
         return {
-            eHandler,
+            moveHandler,
             dragSelector,
-            handlers
+            handlers,
+            deleteHandler
         }
     }
 })
