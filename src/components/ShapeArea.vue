@@ -13,8 +13,8 @@
 import { computed, defineComponent, watch } from "@vue/runtime-core";
 import { defineEmits } from "@vue/runtime-core";
 import VueResizable from 'vue-resizable'
-const emit = defineEmits(['delete'])
 export default defineComponent({
+    emits: ['delete'],
     components: {
         VueResizable
     },
