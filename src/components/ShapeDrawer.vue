@@ -8,7 +8,7 @@
             <div>
                 <slot></slot>
             </div>
-            <span v-for="(shape, index) in shapesArray" :key="index" style="position: absolute; top: 0;">
+            <span v-for="(shape, index) in shapesArray" :key="index">
                 <component :is="shape" @delete="deleteChild(index)" />
             </span>
         </div>
@@ -70,11 +70,6 @@ export default defineComponent({
             }
             currentShape = null;
             shapeState = null
-
-
-            // drawDiv(startCoords.value, endCoords.value)
-            // startCoords.value = {}
-            // endCoords.value = {}
         }
 
 
@@ -135,10 +130,17 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scooped>
 .selection-area {
     border: 1px solid red;
     background-color: #FF000055;
 
+}
+
+span {
+    position: absolute;
+    top: 0;
+    height: 0;
+    width: 0;
 }
 </style>
