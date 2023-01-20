@@ -31,29 +31,24 @@ export default defineComponent({
 
         onMounted(() => {
             if (props.modeSelected.value === 'move') {
-                resizableElement.value.$el.classList.add('drag-el')
+                dragClass(props.modeSelected.value)
             }
         })
         watch(props.modeSelected, (newMode) => {
-            if (newMode === 'move') {
-                resizableElement.value.$el.classList.add('drag-el')
-            }
-            if (newMode === 'draw') {
-                resizableElement.value.$el.classList.remove('drag-el')
-            }
+            dragClass(newMode)
         })
-
-
         watch(props.shapeState.width, () => {
-            if (props.modeSelected.value === 'move') {
-                resizableElement.value.$el.classList.add('drag-el')
-
-            }
-            if (props.modeSelected.value === 'draw') {
-                resizableElement.value.$el.classList.remove('drag-el')
-            }
+            dragClass(props.modeSelected.value)
         })
 
+        function dragClass(modeSelected) {
+            if (modeSelected === 'move') {
+                resizableElement.value.$el.classList.add('drag-el')
+            }
+            if (modeSelected === 'draw') {
+                resizableElement.value.$el.classList.remove('drag-el')
+            }
+        }
         function moveHandler(data) {
             props.shapeState.width.value = data.width
             props.shapeState.height.value = data.height
