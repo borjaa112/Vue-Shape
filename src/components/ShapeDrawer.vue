@@ -131,12 +131,6 @@ export default defineComponent({
 </script>
 
 <style scooped>
-.selection-area {
-    border: 1px solid red;
-    background-color: #FF000055;
-
-}
-
 span {
     position: absolute;
     top: 0;

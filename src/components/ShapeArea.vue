@@ -1,5 +1,5 @@
 <template>
-    <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableComponent" :active="handlers"
+    <vue-resizable :dragSelector="dragSelector" :fit-parent="false" ref="resizableElement" :active="handlers"
         style="position: relative" :width="shapeState.width.value" :height="shapeState.height.value"
         :left="shapeState.left.value" :top="shapeState.top.value" @resize:move="moveHandler" @resize:start="moveHandler"
         @resize:end="moveHandler" @drag:move="moveHandler" @drag:start="moveHandler" @drag:end="moveHandler"
@@ -10,8 +10,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, watch } from "@vue/runtime-core";
-import { defineEmits } from "@vue/runtime-core";
+import { computed, defineComponent, onMounted, ref, watch } from "@vue/runtime-core";
 import VueResizable from 'vue-resizable'
 export default defineComponent({
     emits: ['delete'],
@@ -27,43 +26,33 @@ export default defineComponent({
         }
     },
     setup(props, { emit }) {
-
-
         const dragSelector = '.resizable-content'
-        // const active = computed(() => {
-        //     props.modeSelected.value
-        // })
+        const resizableElement = ref(null)
 
+        onMounted(() => {
+            if (props.modeSelected.value === 'move') {
+                resizableElement.value.$el.classList.add('drag-el')
+            }
+        })
         watch(props.modeSelected, (newMode) => {
             if (newMode === 'move') {
-                const elements = document.querySelectorAll(".resizable-content")
-                for (let element of elements.entries()) {
-                    element[1].classList.add('drag-el')
-                }
+                resizableElement.value.$el.classList.add('drag-el')
             }
             if (newMode === 'draw') {
-                const elements = document.querySelectorAll(".resizable-content")
-                for (let element of elements.entries()) {
-                    element[1].classList.remove('drag-el')
-                }
+                resizableElement.value.$el.classList.remove('drag-el')
             }
-        }, { immediate: true })
+        })
 
 
         watch(props.shapeState.width, () => {
             if (props.modeSelected.value === 'move') {
-                const elements = document.querySelectorAll(".resizable-content")
-                for (let element of elements.entries()) {
-                    element[1].classList.add('drag-el')
-                }
+                resizableElement.value.$el.classList.add('drag-el')
+
             }
             if (props.modeSelected.value === 'draw') {
-                const elements = document.querySelectorAll(".resizable-content")
-                for (let element of elements.entries()) {
-                    element[1].classList.remove('drag-el')
-                }
+                resizableElement.value.$el.classList.remove('drag-el')
             }
-        }, { immediate: true })
+        })
 
         function moveHandler(data) {
             props.shapeState.width.value = data.width
@@ -85,7 +74,8 @@ export default defineComponent({
             moveHandler,
             dragSelector,
             handlers,
-            deleteHandler
+            deleteHandler,
+            resizableElement
         }
     }
 })
@@ -93,7 +83,6 @@ export default defineComponent({
 
 <style scoped>
 .selection-area {
-    /* position: absolute; */
     border: 1px solid red;
     background-color: #FF000055;
 }
