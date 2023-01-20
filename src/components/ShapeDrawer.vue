@@ -120,7 +120,6 @@ export default defineComponent({
             wrapper,
             shapesArray,
             selectionMode,
-            modeSelected,
             undo,
             redo,
             deleteChild
